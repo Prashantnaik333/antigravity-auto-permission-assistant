@@ -1,0 +1,16 @@
+{
+  "active_project_path": "",
+  "recent_projects": [],
+  "auto_approve_safe_read_only": true,
+  "auto_approve_test_commands": false,
+  "listen_host": "127.0.0.1",
+  "listen_port": 49152,
+  "integration_mode": "hook",
+  "ai_provider": "rule_based",
+  "ai_api_key": "",
+  "ai_base_url": "http://localhost:11434/v1",
+  "ai_model": "rule-based-local",
+  "theme": "dark",
+  "log_level": "INFO",
+  "audit_log_path": ""
+}

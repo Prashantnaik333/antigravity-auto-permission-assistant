@@ -1,0 +1,86 @@
+{
+  "version": "1.0.0",
+  "name": "Default AAPA Safety Policy",
+  "description": "Deterministic safety rules for analyzing Antigravity AI permission requests.",
+  "settings": {
+    "auto_approve_safe_read_only": true,
+    "auto_approve_test_commands": false,
+    "enforce_workspace_boundary": true,
+    "block_destructive_commands": true,
+    "block_elevated_privileges": true,
+    "block_remote_pipe_to_shell": true,
+    "block_sensitive_file_access": true,
+    "allow_prompt_injection_detection": true
+  },
+  "read_only_commands": [
+    "ls", "dir", "cat", "type", "head", "tail", "more", "less",
+    "pwd", "cd", "echo", "which", "where",
+    "grep", "findstr", "wc", "stat", "file",
+    "git status", "git log", "git diff", "git show", "git branch", "git rev-parse",
+    "python --version", "python3 --version", "node -v", "npm -v", "cargo --version", "go version", "rustc --version"
+  ],
+  "allowed_test_commands": [
+    "pytest", "python -m pytest", "python -m unittest",
+    "npm test", "npm run test", "yarn test", "pnpm test",
+    "cargo test", "go test ./...", "ctest"
+  ],
+  "allowed_linters": [
+    "flake8", "ruff", "black --check", "mypy", "pylint",
+    "eslint", "prettier --check", "cargo clippy", "golangci-lint",
+    "dart analyze"
+  ],
+  "review_required_prefixes": [
+    "npm install", "npm i", "npm add", "yarn add", "pnpm add",
+    "pip install", "pip3 install", "poetry add", "pipenv install",
+    "cargo add", "go get",
+    "git checkout", "git switch", "git commit", "git push", "git pull", "git merge", "git rebase",
+    "curl", "wget", "Invoke-WebRequest", "Invoke-RestMethod",
+    "docker", "podman", "kubectl", "terraform"
+  ],
+  "blocked_patterns": [
+    {
+      "pattern": "\\b(format\\s+[a-z]:|diskpart|mkfs|fdisk|dd\\s+if=)",
+      "category": "DISK_WIPE",
+      "reason": "Attempting disk wipe or drive formatting"
+    },
+    {
+      "pattern": "(\\brm\\s+-[rf]{1,2}\\s+([/\\\\~]|\\$HOME|%USERPROFILE%)|\\b(del|rmdir|erase)\\s+(?:/[a-zA-Z]\\s+)*[a-z]:[/\\\\])",
+      "category": "DESTRUCTIVE_FILESYSTEM",
+      "reason": "Attempting catastrophic root, drive, or user profile deletion"
+    },
+    {
+      "pattern": "\\b(sudo|runas|Start-Process\\s+.*-Verb\\s+runas|gsudo)\\b",
+      "category": "ELEVATED_PRIVILEGE",
+      "reason": "Requesting elevated administrative or root privileges"
+    },
+    {
+      "pattern": "(curl|wget|Invoke-WebRequest|iwr)\\b.*\\|\\s*(sh|bash|zsh|powershell|pwsh|cmd)\\b",
+      "category": "REMOTE_CODE_EXECUTION",
+      "reason": "Piping unverified remote web content directly into an execution shell"
+    },
+    {
+      "pattern": "\\b(Set-ExecutionPolicy\\s+(Bypass|Unrestricted)|disable-netfirewallrule|netsh\\s+advfirewall\\s+set\\s+.*state\\s+off)\\b",
+      "category": "SECURITY_BYPASS",
+      "reason": "Attempting to disable operating system security policies or firewall rules"
+    },
+    {
+      "pattern": "(\\.env|id_rsa|id_ed25519|\\.aws/credentials|secrets?\\.json|credentials\\.json|\\.pem|\\.key)",
+      "category": "SENSITIVE_DATA_ACCESS",
+      "reason": "Command references sensitive credential or private key files"
+    },
+    {
+      "pattern": "\\b(shutdown|reboot|init\\s+0|init\\s+6)\\b",
+      "category": "SYSTEM_SHUTDOWN",
+      "reason": "Attempting system shutdown or restart"
+    },
+    {
+      "pattern": ":\\(\\)\\s*\\{\\s*:\\|:&\\s*\\};:",
+      "category": "FORK_BOMB",
+      "reason": "Fork bomb denial of service pattern detected"
+    }
+  ],
+  "sensitive_file_patterns": [
+    "*.env*", "*id_rsa*", "*id_ed25519*", "*.pem", "*.key",
+    "*credentials.json", "*secrets.json", "*token.txt", "*.pfx", "*.p12"
+  ]
+}
