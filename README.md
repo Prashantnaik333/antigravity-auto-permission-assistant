@@ -1,6 +1,6 @@
 # Antigravity Auto Permission Assistant (AAPA)
 
-[![Tests](https://iconscout.com/icons/computer-science)](https://github.com/Prashantnaik333/antigravity-auto-permission-assistant/blob/main/.github/workflows/tests.yml)
+
 [![Python Version](https://img.shields.io/badge/python-3.11%2B-blue.svg)](https://www.python.org/downloads/)
 [![License](https://img.shields.io/badge/license-Apache--2.0-green.svg)](LICENSE)
 [![Platform](https://img.shields.io/badge/platform-Windows%20%7C%20Linux%20%7C%20macOS-lightgrey.svg)]()
